@@ -30,15 +30,15 @@ Enter the necessary information
 
   ![image-20230226114646771](assets/images/posts/README2/image-20230226114646771.png)
 
-- Click New   project 
+  Click New   project 
 
   ![image-20230226120110304](assets/images/posts/README2/image-20230226120110304.png)
 
-- After the project was created you can open the project
+  After the project was created you can open the project
 
-- ![image-20230226120338066](assets/images/posts/README2/image-20230226120338066.png)
+  ![image-20230226120338066](assets/images/posts/README2/image-20230226120338066.png)
 
-- After was created Click on "Assets"
+  After was created Click on "Assets"
 
   ![image-20230226120442148](assets/images/posts/README2/image-20230226120442148.png)
 
@@ -46,11 +46,11 @@ Then we click new asset
 
 ![image-20230226120545427](assets/images/posts/README2/image-20230226120545427.png)
 
-- and we type Jupyter Notebook
+and we type Jupyter Notebook
 
-  ![image-20230226120648094](assets/images/posts/README2/image-20230226120648094.png)
+![image-20230226120648094](assets/images/posts/README2/image-20230226120648094.png)
 
-- Click on "Notebook"
+Click on "Notebook"
 
 ![image-20230226120952866](assets/images/posts/README2/image-20230226120952866.png)
 
@@ -58,41 +58,65 @@ Then we click new asset
 
 
 
-- Now click on “Create Notebook”
+Now click on “Create Notebook”. Now we can use this notebook to getting start with IBM Cloud.
 
 
 
-## Step3 .Connect Jupyter notebook to IBM Cloud Storage
+## Step 3 .Connect Jupyter notebook to IBM Cloud Storage
 
 
 
 Cloud storage helps you to store data and files in an off-site location and can be accessed either via the public internet or by a dedicated private network. The data you send off-site for storage is a third-party cloud provider ‘s responsibility. The vendor owns, secures, operates and supports the servers and the relevant services and guarantees that you have access to the data anytime you need it.
 
-**How to access files from IBM Cloud Storage?**
-
-Assuming you have a account in IBM Cloud Storage , first step is you have to create a bucket in Cloud storage and within it you can upload files or folder.
-
-![img](assets/images/posts/README2/image-33-1024x433-16774058329241.png)
-
-Go to Service credentials and copy API details
-
-![img](assets/images/posts/README2/image-34-1024x488-16774058329243.png)
-
-For endpoint_url you have to select configuration under bucket and copy the public URL
-
-![img](assets/images/posts/README2/image-36-1024x621-16774058329245.png)
-
-After this you have to grant public access to read the content of your bucket
-
-![img](assets/images/posts/README2/image-37-1024x427-16774058329247.png)
+Assuming you have a account in IBM Cloud Storage , you click customize your bucket
 
 
 
-# Working in Jupyter Notebook with IBM Cloud
+![image-20230226122605261](assets/images/posts/README/image-20230226122605261.png)
+
+name you unique bucket name as for example ruslanmv-bucket, you can put your favorite unique name
+
+
+
+![image-20230226123403897](assets/images/posts/README/image-20230226123403897.png)
+
+## Step 4 Getting the credentials for the python connection
+
+In this part we should copy your own credentials to use in the next step.
+
+Go to Service credentials and create new credentials 
+
+![image-20230226125815236](assets/images/posts/README/image-20230226125815236.png)
+
+and copy API details
+
+![image-20230226130431914](assets/images/posts/README/image-20230226130431914.png)
+
+For endpoint_url you have to select configuration under bucket and copy the private URL
+
+
+
+![image-20230226135913108](assets/images/posts/README/image-20230226135913108.png)
+
+you should choose the edpoints, if you are working in a public bucket you should use the public endopoint, in my case I will use only private buckets so we choose the private endpoint.
+
+![image-20230226140053190](assets/images/posts/README/image-20230226140053190.png)
+
+
+
+
+
+
+
+
+
+## Step 5. Connect Jupyter Notebook with IBM Cloud
 
 Python support is provided through a fork of the boto3 library with features to make the most of IBM Cloud Object Storage.
 
-It can be installed from the Python Package Index through pip install ibm-cos-sdk.
+The package that we will use is the ibm-cos-sdk that should be installed in the default notebook, otherwise you can install by using pip install ibm-cos-sdk.
+
+Let us return back you your notebook that you create and first let us load the following libraries.
 
 
 ```python
@@ -101,6 +125,8 @@ from ibm_botocore.client import Config, ClientError
 import pandas as pd
 import io
 ```
+
+In this part you should paste the credentials that you have copied in the step 4
 
 
 ```python
@@ -120,7 +146,7 @@ auth_endpoint = 'https://iam.cloud.ibm.com/identity/token' # Current list avaiab
 service_endpoint = 'https://s3.private.eu-de.cloud-object-storage.appdomain.cloud'
 ```
 
-# Client operations
+## Step 6. Client operations
 
 A client provides a low-level interface to the COS S3 API. This allows for processing HTTP responses directly, rather than making use of abstracted methods and attributes provided by a resource to access the information contained in headers or XML response payloads.
 
@@ -135,7 +161,7 @@ cos = ibm_boto3.client('s3',
                          endpoint_url=service_endpoint)
 ```
 
-You can check all the posible operations that you can do with IBM s3 client byt typing
+You can check all the posible operations that you can do with IBM s3 client by typing
 
 
 ```python
@@ -276,8 +302,6 @@ df
 
 ```
 
-
-
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -304,12 +328,6 @@ df
     </tr>
   </tbody>
 </table>
-
-
-
-
-
-
 ```python
 df.to_csv('out.csv') 
 ```
@@ -388,11 +406,7 @@ upload_file(file_name,'ruslanmv-bucket')
 ```
 
 
-
-
     True
-
-
 
 
 ```python
@@ -402,8 +416,6 @@ cos.upload_file(Filename=file_name,Bucket='ruslanmv-bucket',Key='out.csv')
 ```
 
 ## File Downloads
-
-
 
 ```python
 cos.download_file(Bucket='ruslanmv-bucket',Key='out.csv',Filename='downloaded_out.csv')
@@ -534,6 +546,9 @@ for bucket in cos.list_buckets()['Buckets']:
     mypersonalbucket1
     ruslanmv-bucket
 
+Additionally you can check by yourself the content of your uploaded files
+
+![image-20230226202152307](assets/images/posts/README/image-20230226202152307.png)
 
 For more commands you can visit the documentation of IBM S3 [here]( https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-python) 
 
