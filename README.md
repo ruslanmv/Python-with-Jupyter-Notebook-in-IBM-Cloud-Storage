@@ -400,6 +400,11 @@ def upload_file(file_name, bucket, object_name=None):
     return True
 ```
 
+If you want to upload your file a a new bucket that you don't have created yet, you can create a bucket by specifying a unique name for it:
+```python
+cos.create_bucket(Bucket='ruslanmv-bucket')
+```
+and then you can upload your file
 
 ```python
 upload_file(file_name,'ruslanmv-bucket')
